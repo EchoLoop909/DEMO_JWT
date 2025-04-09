@@ -1,30 +1,30 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.request.ApiResponse;
-import com.example.demo.dto.request.AuthenticationRequest;
-import com.example.demo.dto.response.UserResponse;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.service.UserService;
-import jakarta.validation.Valid;
+import com.example.demo.model.dto.request.Login;
+import com.example.demo.model.dto.request.Register;
+import com.example.demo.model.dto.response.AuthResponse;
+import com.example.demo.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 
 public class AuthenticationController {
 
-    private final UserService userService;
+    private final AuthService authService;
 
-    @PostMapping("/create")
-    public ApiResponse<UserResponse> create(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
-        return ApiResponse.<UserResponse> builder()
-                .result(userService.createUser(authenticationRequest))
-                .build();
+    @PostMapping("/login")
+    public ResponseEntity<?> login (@RequestBody Login request) {
+        String token = authService.login(request.getUsername(), request.getPassword());
+        return ResponseEntity.ok(new AuthResponse(token));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody Register request) {
+        authService.register(request);
+        return ResponseEntity.ok("Đăng ký thành công");
     }
 }
