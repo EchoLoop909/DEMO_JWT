@@ -1,9 +1,10 @@
 package com.example.demo.service;
 
+import com.example.demo.auth.AuthenticationResponse;
+import com.example.demo.auth.RegisterRequest;
 import com.example.demo.model.dto.request.Register;
+import org.springframework.http.ResponseEntity;
 
 public interface AuthService {
-    String login(String username, String password);
-
-    String register(Register request);
+    AuthenticationResponse register(RegisterRequest request);
 }

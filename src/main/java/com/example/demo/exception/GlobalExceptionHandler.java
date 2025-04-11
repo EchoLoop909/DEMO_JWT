@@ -19,8 +19,19 @@ public class GlobalExceptionHandler {
 
     private static final String MIN_ATTRIBUTE = "min";
 
+//    @ExceptionHandler(value = Exception.class)
+//    ResponseEntity<ApiResponse> handlingRuntimeException(RuntimeException exception) {
+//        log.error("Exception: ", exception);
+//        ApiResponse apiResponse = new ApiResponse();
+//
+//        apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
+//        apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
+//
+//        return ResponseEntity.badRequest().body(apiResponse);
+//    }
+
     @ExceptionHandler(value = Exception.class)
-    ResponseEntity<ApiResponse> handlingRuntimeException(RuntimeException exception) {
+    ResponseEntity<ApiResponse> handlingRuntimeException(Exception exception) {
         log.error("Exception: ", exception);
         ApiResponse apiResponse = new ApiResponse();
 
@@ -98,8 +109,16 @@ public class GlobalExceptionHandler {
         try {
             errorCode = ErrorCode.valueOf(enumKey);
 
-            var constraintViolation =
-                    exception.getBindingResult().getAllErrors().getFirst().unwrap(ConstraintViolation.class);
+//            var constraintViolation =
+//                    exception.getBindingResult().getAllErrors().getFirst().unwrap(ConstraintViolation.class);
+
+            var constraintViolation = exception.getBindingResult()
+                    .getAllErrors()
+                    .stream()
+                    .findFirst() // Trả về Optional<ObjectError>
+                    .map(error -> error.unwrap(ConstraintViolation.class))
+                    .orElse(null); // hoặc throw exception nếu muốn
+
 
             attributes = constraintViolation.getConstraintDescriptor().getAttributes();
 

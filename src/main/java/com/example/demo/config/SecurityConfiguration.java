@@ -44,6 +44,7 @@ public class SecurityConfiguration {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/staff/**").authenticated() // Bắt buộc có JWT
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider)
