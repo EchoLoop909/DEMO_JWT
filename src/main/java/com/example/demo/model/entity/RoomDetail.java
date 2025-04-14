@@ -11,21 +11,19 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class RoomDetail {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20)
-    private String machitietphong;
+    @Column(name = "room_detail_code", length = 20, nullable = false)
+    private String roomDetailCode;
 
-    // Khóa ngoại đến bảng phong
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "maphong", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
-    // Khóa ngoại đến bảng datphong
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "madatphong", nullable = false)
+    // Khóa ngoại đến bảng booking
+    @ManyToOne
+    @JoinColumn(name = "booking_id", nullable = false)  // Đảm bảo cột này tồn tại trong bảng room_detail
     private Booking booking;
 }

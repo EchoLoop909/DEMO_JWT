@@ -3,6 +3,8 @@ package com.example.demo.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "service")
 @Getter
@@ -11,17 +13,16 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ServiceEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 10, nullable = false)
-    private String madichvu; // Mã dịch vụ - Khóa chính
+    @Column(name = "name")
+    private String name;
 
-    @Column(length = 20, nullable = false)
-    private String tendichvu; // Tên dịch vụ
+    @Column(name = "price")
+    private BigDecimal price;
 
-    @Column(nullable = false)
-    private Double gia; // Giá dịch vụ
+    @Column(name = "description")
+    private String description;
 }

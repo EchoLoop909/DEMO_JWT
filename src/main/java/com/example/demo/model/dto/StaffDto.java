@@ -6,10 +6,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StaffDto {
-    private String chucvu;
-    private String diachi;
-    private String ho;
-    private String ten;
-    private String manhanvien;
-    private String sodienthoai;
+    private String address;
+    private String employeeCode;
+    private String firstName;
+    private String lastName;
+    private String position;
+    private String phoneNumber;
 }

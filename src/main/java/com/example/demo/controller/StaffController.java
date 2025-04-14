@@ -5,13 +5,10 @@ import com.example.demo.model.dto.request.ApiResponse;
 import com.example.demo.service.StaffService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/staff/")
 @RequiredArgsConstructor
 
 public class StaffController {
@@ -22,5 +19,28 @@ public class StaffController {
     public ResponseEntity<ApiResponse> createStaff(@RequestBody StaffDto dto) {
         ApiResponse response = staffService.createStaff(dto);
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ApiResponse> deleteStaff(@PathVariable Long id) {
+        ApiResponse response= staffService.deleteStaff(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/update/{id}")
+    public ResponseEntity<ApiResponse> updateStaff(@PathVariable Long id,
+                                                   @RequestBody StaffDto dto) {
+        ApiResponse apiResponse = staffService.updateStaff(id,dto);
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping("/getlist")
+    public ResponseEntity<ApiResponse> getStaffList(@RequestParam(required = false) String firstName,
+                                                    @RequestParam(required = false) String lastName,
+                                                    @RequestParam(required = false) Long id,
+                                                    @RequestParam(defaultValue = "1") int pageIdx,
+                                                    @RequestParam(defaultValue = "100") int pageSize) {
+        ApiResponse apiResponse = staffService.getStaffList(firstName,lastName,id,pageIdx -1,pageSize);
+        return ResponseEntity.ok(apiResponse);
     }
 }

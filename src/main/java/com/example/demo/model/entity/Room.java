@@ -16,13 +16,17 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 10)
-    private String maphong;
+    @Column(name = "roomNumber")
+    private String roomNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "maloaiphong", nullable = false)
-    private RoomType roomType; // Khóa ngoại tới Loại phòng
+    @ManyToOne
+    @JoinColumn(name = "room_type_id")
+    private RoomType roomType;
 
-    @Column(length = 10, nullable = false)
-    private String sophong; // Số phòng
+    @ManyToOne
+    @JoinColumn(name = "room_status_id")
+    private RoomStatus status;
+
+    @Column(name = "description")
+    private String description;
 }

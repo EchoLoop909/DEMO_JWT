@@ -24,21 +24,18 @@ public class Custommer{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 10)
-    private String ten;
+    @Column(name = "fullName")
+    private String fullName;
 
-    @Column(length = 20)
-    private String ho;
+    @Column(name = "phone")
+    private String phone;
 
-    @Column(length = 50)
-    private String diachi;
+    @Column(name = "email")
+    private String email;
 
-    @Column(length = 12, nullable = false)
-    private String cccd;
+    @Column(name = "identityNumber")
+    private String identityNumber;
 
-    @Column(length = 15, nullable = false)
-    private String sodienthoai;
-
-    @Column(length = 20, nullable = false)
-    private String sothenganhang;
+    @Column(name = "address")
+    private String address;
 }

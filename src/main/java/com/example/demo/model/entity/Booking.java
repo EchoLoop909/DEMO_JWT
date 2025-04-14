@@ -2,9 +2,6 @@ package com.example.demo.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import com.example.demo.model.entity.Custommer;
-
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "booking")
@@ -14,42 +11,28 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class Booking {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "madatphong", length = 10)
-    private String madatphong;
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Custommer customer;
 
-    // Liên kết đến nhân viên
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manhanvien", nullable = false)
-    private Staff staff;
+    @ManyToOne
+    @JoinColumn(name = "employee_id")  // Đổi tên cột
+    private Employee employee;
 
-    // Liên kết đến khách hàng
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "makhachhang", nullable = false)
-    private Custommer custommer;
+    @ManyToOne
+    @JoinColumn(name = "room_id")  // Đổi tên cột
+    private Room room;
 
-    @Column(name = "ngaydatphong", nullable = false)
-    private LocalDate ngaydatphong;
+    @Column(name = "checkInDate")
+    private java.time.LocalDateTime checkInDate;
 
-    @Column(name = "songayo", nullable = false)
-    private Integer songayo;
+    @Column(name = "checkOutDate")
+    private java.time.LocalDateTime checkOutDate;
 
-    @Column(name = "checkindate", nullable = false)
-    private LocalDate checkindate;
-
-    @Column(name = "checkoutdate", nullable = false)
-    private LocalDate checkoutdate;
-
-    @Column(name = "phuongthucthanhtoan", length = 20, nullable = false)
-    private String phuongthucthanhtoan;
-
-    @Column(name = "coc", nullable = false)
-    private Double coc;
-
-    @Column(name = "tongtien", nullable = false)
-    private Float tongtien;
+    @Column(name = "status")
+    private String status;
 }

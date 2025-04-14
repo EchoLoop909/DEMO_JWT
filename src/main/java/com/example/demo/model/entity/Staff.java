@@ -16,31 +16,23 @@ public class Staff {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 10)
-    private String manhanvien;
+    @Column(name = "employee_code", length = 10, nullable = false, unique = true)  // Mã nhân viên
+    private String employeeCode;
 
-    @Column(length = 10)
-    private String ten;
+    @Column(name = "first_name", length = 20, nullable = false)  // Tên
+    private String firstName;
 
-    @Column(length = 20)
-    private String ho;
+    @Column(name = "last_name", length = 20, nullable = false)  // Họ
+    private String lastName;
 
-    @Column(length = 20)
-    private String chucvu;
+    @Column(name = "position", length = 20, nullable = false)  // Chức vụ
+    private String position;
 
-    public Staff(Long id, String manhanvien, String ten, String ho, String chucvu, String diachi, String sodienthoai) {
-        this.id = id;
-        this.manhanvien = manhanvien;
-        this.ten = ten;
-        this.ho = ho;
-        this.chucvu = chucvu;
-        this.diachi = diachi;
-        this.sodienthoai = sodienthoai;
-    }
+    @Column(name = "address", length = 50)  // Địa chỉ
+    private String address;
 
-    @Column(length = 50)
-    private String diachi;
+    @Column(name = "phone_number", length = 15, nullable = false, unique = true)  // Số điện thoại
+    private String phoneNumber;
 
-    @Column(length = 15, nullable = false, unique = true)
-    private String sodienthoai;
+
 }

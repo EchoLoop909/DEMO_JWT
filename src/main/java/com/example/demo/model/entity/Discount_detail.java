@@ -18,19 +18,19 @@ public class Discount_detail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20)
-    private String mactgg;
+    @Column(name = "discount_code", length = 20, nullable = false)  // Mã chương trình giảm giá
+    private String discountCode;
 
-    @Column(nullable = false)
-    private Double tiletrietkhau;
+    @Column(name = "discount_percentage", nullable = false)  // Tỉ lệ chiết khấu (%)
+    private Double discountPercentage;
 
-    @Column(nullable = false)
-    private LocalDate ngaybatdau;
+    @Column(name = "start_date", nullable = false)  // Ngày bắt đầu
+    private LocalDate startDate;
 
-    @Column(nullable = false)
-    private LocalDate ngayketthuc;
+    @Column(name = "end_date", nullable = false)  // Ngày kết thúc
+    private LocalDate endDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "maloaiphong", nullable = false)
-    private RoomType roomType; // Tham chiếu đến entity RoomType
+    @JoinColumn(name = "room_type_id", nullable = false)  // Tham chiếu đến RoomType, đổi tên cột cho phù hợp
+    private RoomType roomType;
 }
