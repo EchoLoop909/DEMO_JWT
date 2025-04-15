@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.dto.StaffDto;
-import com.example.demo.model.dto.request.ApiResponse;
+import com.example.demo.model.dto.response.ApiResponse;
 import com.example.demo.service.StaffService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ public class StaffController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse> deleteStaff(@PathVariable Long id) {
-        ApiResponse response= staffService.deleteStaff(id);
+        ApiResponse response = staffService.deleteStaff(id);
         return ResponseEntity.ok(response);
     }
 

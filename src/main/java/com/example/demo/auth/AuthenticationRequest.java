@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class AuthenticationRequest {
+
     private String password;
     private String email;
+
 }

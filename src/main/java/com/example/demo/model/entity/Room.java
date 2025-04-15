@@ -28,5 +28,5 @@ public class Room {
     private RoomStatus status;
 
     @Column(name = "description")
-    private String description;
+    private String description;//Mo ta phong
 }

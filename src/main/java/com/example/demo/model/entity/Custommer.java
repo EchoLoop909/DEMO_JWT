@@ -34,7 +34,7 @@ public class Custommer{
     private String email;
 
     @Column(name = "identityNumber")
-    private String identityNumber;
+    private String identityNumber;//CCCD
 
     @Column(name = "address")
     private String address;

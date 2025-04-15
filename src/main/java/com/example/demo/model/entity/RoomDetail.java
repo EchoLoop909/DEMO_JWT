@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "room_detail")
+@Table(name = "room_detail")//chi tiet phong
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,7 +16,7 @@ public class RoomDetail {
     private Long id;
 
     @Column(name = "room_detail_code", length = 20, nullable = false)
-    private String roomDetailCode;
+    private String roomDetailCode;//Ma cho tiet phong
 
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)

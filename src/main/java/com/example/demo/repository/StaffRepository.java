@@ -13,12 +13,13 @@ import java.util.Optional;
 @Repository
 public interface StaffRepository extends JpaRepository<Staff, Long> {
 
-    @Query(value = "SELECT * FROM staff " +
-            "WHERE (:firstName IS NULL OR firstName LIKE CONCAT('%', :firstName, '%')) " +
-            "AND (:id IS NULL OR id = :id) " +
-            "AND (:lastName IS NULL OR lastName LIKE CONCAT('%', :lastName, '%')) " ,
-            nativeQuery = true)
-    Page<Staff> findStaff (@Param("id") Long id, @Param("firstName") String firstName, @Param("lastName") String lastName,  Pageable pageable);
+    @Query(value = "SELECT * FROM staff WHERE (:firstName IS NULL OR first_name LIKE %:firstName%) " +
+            "AND (:lastName IS NULL OR last_name LIKE %:lastName%) " +
+            "AND (:id IS NULL OR id = :id)", nativeQuery = true)
+    Page<Staff> findStaff(@Param("id") Long id,
+                          @Param("firstName") String firstName,
+                          @Param("lastName") String lastName,
+                          Pageable pageable);
 
 
 }
