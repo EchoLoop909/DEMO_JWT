@@ -17,7 +17,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "Mk25REJvvi47dZ+h9T6QOJ0bz6PcsPvHtT8vKgYOhuZAEOJdAY9DoHPM8U0nFZ4ZLFbM+TvMdSacQVBMsuQN/Q==";
+    private final  String SECRET_KEY = "Mk25REJvvi47dZ+h9T6QOJ0bz6PcsPvHtT8vKgYOhuZAEOJdAY9DoHPM8U0nFZ4ZLFbM+TvMdSacQVBMsuQN/Q==";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -39,7 +39,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))//30 phut
                 .signWith(SignatureAlgorithm.HS256, getSignInKey())
                 .compact();
     }
@@ -60,16 +60,23 @@ public class JwtService {
 
     private Claims extractAllClaims(String token) {
         return Jwts
-//                .parserBuilder()
-//                .setSigningKey(getSignInKey())
-//                .build()
-//                .parseClaimsJws(token)
-//                .getBody();
+
                 .parser()
                 .setSigningKey(getSignInKey())
                 .parseClaimsJws(token)
                 .getBody();
     }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        return Jwts
+                .builder()
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000)) // 7 ngày
+                .signWith(SignatureAlgorithm.HS256, getSignInKey())
+                .compact();
+    }
+
 
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);

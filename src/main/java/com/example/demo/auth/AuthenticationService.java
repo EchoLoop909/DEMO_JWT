@@ -1,9 +1,12 @@
 package com.example.demo.auth;
 
 import com.example.demo.config.JwtService;
+import com.example.demo.model.entity.RefreshToken;
 import com.example.demo.model.entity.Role;
 import com.example.demo.model.entity.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.refreshTokenRepository;
+import com.example.demo.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,6 +14,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,10 +32,17 @@ public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request){
-        var user = User.builder()
-                .firstname(request.getFirstName())
-                .lastname(request.getLastName())
+    private final refreshTokenRepository refreshTokenRepository;
+
+    public AuthenticationResponse register(RegisterRequest request) {
+        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
+        if (userOptional.isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        User user = User.builder()
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
@@ -36,9 +50,13 @@ public class AuthenticationService {
 
         userRepository.save(user);
 
-        var jwtToken = jwtService.generateToken(user);
+        String accessToken = jwtService.generateToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+
+//        String jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
-                .token(jwtToken)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 
@@ -50,12 +68,37 @@ public AuthenticationResponse authenticate(AuthenticationRequest request) {
             )
     );
 
+    // Lấy thông tin người dùng từ cơ sở dữ liệu
     var user = userRepository.findByEmail(request.getEmail())
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-    var jwtToken = jwtService.generateToken((UserDetails) user);
+    // Tạo access token và refresh token
+    var accessToken = jwtService.generateToken((UserDetails) user);
+    var refreshToken = jwtService.generateRefreshToken((UserDetails) user);
+
+    // Lưu refresh token vào cơ sở dữ liệu
+    RefreshToken token = new RefreshToken();
+    token.setToken(refreshToken);
+    token.setUser(user);
+    token.setExpiryDate(Instant.now().plus(7, ChronoUnit.DAYS));  // Đặt thời gian hết hạn cho refresh token
+    token.setRevoked(false);  // Đảm bảo rằng token không bị hủy
+
+    // Lưu token vào bảng refreshToken trong cơ sở dữ liệu
+    refreshTokenRepository.save(token);
+
+    // Trả về AuthenticationResponse
     return AuthenticationResponse.builder()
-            .token(jwtToken)
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
             .build();
 }
+    public void deleteToken(String refreshToken) {
+        Optional<RefreshToken> tokenOptional = refreshTokenRepository.findByToken(refreshToken);
+        if (tokenOptional.isPresent()) {
+            // Xóa token khỏi cơ sở dữ liệu
+            refreshTokenRepository.delete(tokenOptional.get());
+        } else {
+            throw new RuntimeException("Refresh token not found");
+        }
+    }
 }
